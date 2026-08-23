@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academics — StudyFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="load" id="loader-overlay"><div class="load-brand"><span class="brand-mark">✓</span><span>Studyflow</span></div><div class="load-spinner"></div></div>
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar-rail">
+      <a class="sidebar-brand" href="index.html">
+        <div class="brand-mark">✓</div>
+        <span>Studyflow</span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html"><span class="rail-icon">⌂</span><span>Dashboard</span></a>
+        <a class="sidebar-link" href="tasks.html"><span class="rail-icon">✓</span><span>Tasks</span></a>
+        <a class="sidebar-link" href="calendar.html"><span class="rail-icon">▣</span><span>Calendar</span></a>
+        <a class="sidebar-link active" href="academics.html"><span class="rail-icon">◎</span><span>Academics</span></a>
+        <a class="sidebar-link" href="study.html"><span class="rail-icon">◷</span><span>Study Sessions</span></a>
+        <a class="sidebar-link" href="progress.html"><span class="rail-icon">📊</span><span>Progress</span></a>
+        <a class="sidebar-link" href="team.html"><span class="rail-icon">👥</span><span>Teams</span></a>
+        <a class="sidebar-link" href="ai.html"><span class="rail-icon">✦</span><span>AI Assistant</span></a>
+        <a class="sidebar-link" href="settings.html"><span class="rail-icon">⚙</span><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-user" style="justify-content: space-between;">
+        <a class="user-avatar-btn" href="settings.html" style="flex:1;">
+          <div class="user-avatar user-avatar-display">N</div>
+          <div class="user-info">
+            <strong class="user-name-display">Noor Anami</strong>
+            <small>Student Plan</small>
+          </div>
+        </a>
+        <button onclick="handleLogout(event)" title="Log Out" style="border:0; background:transparent; cursor:pointer; font-size: 16px; color: crimson; padding: 6px;">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="app-header-inner">
+          <div class="search-bar-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="task-search-input" placeholder="Search tasks, subjects..." />
+          </div>
+          <div class="header-actions">
+            <a class="button button-primary button-small" href="tasks.html">+ New Task</a>
+            <a class="logout-link" href="#" onclick="handleLogout(event)" style="font-size: 13px; font-weight: 600; cursor: pointer;">Log Out</a>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="page-title-row" style="margin-bottom: 24px;">
+          <div>
+            <h2 style="font: 700 28px Outfit, sans-serif; margin: 0 0 4px; color: var(--ink);">Academic Center</h2>
+            <p style="color: var(--muted); margin: 0; font-size: 14px;">Track exams, syllabus readiness, and subject notes in one place.</p>
+          </div>
+        </div>
+
+        <div class="academics-layout">
+          <section class="team-panel">
+            <div class="panel-heading"><h3>Exam Tracker</h3><span class="count">Readiness</span></div>
+            <form class="compact-form" id="exam-form">
+              <input class="form-input" id="exam-title" placeholder="Exam title" required />
+              <select class="form-input" id="exam-subject">
+                <option>Chemistry</option><option>Psychology</option><option>Mathematics</option><option>History</option><option>Computer Science</option>
+              </select>
+              <input class="form-input" type="date" id="exam-date" required />
+              <input class="form-input" type="number" id="exam-readiness" min="0" max="100" value="50" />
+              <textarea class="form-input" id="exam-syllabus" placeholder="Syllabus topics" rows="2"></textarea>
+              <button class="button button-primary button-small" type="submit">Add Exam</button>
+            </form>
+            <div id="exam-list"></div>
+          </section>
+
+          <section class="team-panel">
+            <div class="panel-heading"><h3>Subject Notes</h3><span class="count">Quick notes</span></div>
+            <form class="compact-form" id="note-form">
+              <input class="form-input" id="note-title" placeholder="Note title" required />
+              <select class="form-input" id="note-subject">
+                <option>Chemistry</option><option>Psychology</option><option>Mathematics</option><option>History</option><option>Computer Science</option>
+              </select>
+              <textarea class="form-input" id="note-body" placeholder="Write note..." rows="4" required></textarea>
+              <button class="button button-primary button-small" type="submit">Save Note</button>
+            </form>
+            <div id="notes-list"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — StudyFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="load" id="loader-overlay"><div class="load-brand"><span class="brand-mark">✓</span><span>Studyflow</span></div><div class="load-spinner"></div></div>
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a class="brand-mark" href="index.html" style="text-decoration:none;">✓</a>
+        <h2>Welcome back</h2>
+        <p>Log in to your StudyFlow workspace</p>
+      </div>
+      <form class="auth-form" id="login-form">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-input" id="login-email" value="noor@studyflow.edu" required />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-input" id="login-password" value="password123" required />
+        </div>
+        <div class="form-options">
+          <label><input type="checkbox" checked /> Remember me</label>
+          <a href="#" onclick="showToast('Password reset link sent! ✉'); return false;">Forgot password?</a>
+        </div>
+        <button type="submit" class="button button-primary" style="width: 100%; margin-top: 10px;">Log In <span>→</span></button>
+      </form>
+      <div style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted);">
+        Don't have an account? <a href="signup.html" style="color: var(--blue); font-weight: 600; text-decoration: none;">Sign Up</a> | <a href="index.html" style="color: steelblue; text-decoration: none;">Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
