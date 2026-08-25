@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Sessions — StudyFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="load" id="loader-overlay"><div class="load-brand"><span class="brand-mark">✓</span><span>Studyflow</span></div><div class="load-spinner"></div></div>
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar-rail">
+      <a class="sidebar-brand" href="index.html">
+        <div class="brand-mark">✓</div>
+        <span>Studyflow</span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html"><span class="rail-icon">⌂</span><span>Dashboard</span></a>
+        <a class="sidebar-link" href="tasks.html"><span class="rail-icon">✓</span><span>Tasks</span></a>
+        <a class="sidebar-link" href="calendar.html"><span class="rail-icon">▣</span><span>Calendar</span></a>
+        <a class="sidebar-link" href="academics.html"><span class="rail-icon">◎</span><span>Academics</span></a>
+        <a class="sidebar-link active" href="study.html"><span class="rail-icon">◷</span><span>Study Sessions</span></a>
+        <a class="sidebar-link" href="progress.html"><span class="rail-icon">📊</span><span>Progress</span></a>
+        <a class="sidebar-link" href="team.html"><span class="rail-icon">👥</span><span>Teams</span></a>
+        <a class="sidebar-link" href="ai.html"><span class="rail-icon">✦</span><span>AI Assistant</span></a>
+        <a class="sidebar-link" href="settings.html"><span class="rail-icon">⚙</span><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-user">
+        <a class="user-avatar-btn" href="settings.html" style="flex:1;">
+          <div class="user-avatar user-avatar-display">N</div>
+          <div class="user-info">
+            <strong class="user-name-display">Noor Anami</strong>
+            <small>Student Plan</small>
+          </div>
+        </a>
+        <div class="sidebar-user-actions">
+          <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌙</button>
+          <button onclick="handleLogout(event)" title="Log Out" style="border:0; background:transparent; cursor:pointer; font-size: 16px; color: crimson; padding: 6px;">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="app-header-inner">
+          <div class="search-bar-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="task-search-input" placeholder="Search tasks, subjects..." />
+          </div>
+          <div class="header-actions">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌙</button>
+            <button class="button button-primary button-small" onclick="openTaskModal()">+ New Task</button>
+            <a class="logout-link" href="#" onclick="handleLogout(event)" style="font-size: 13px; font-weight: 600; cursor: pointer;">Log Out</a>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="study-layout">
+          <div class="pomodoro-card">
+            <h2 style="font: 700 24px Outfit, sans-serif; margin: 0 0 20px; color: var(--ink);">Focus Timer</h2>
+            <div class="timer-mode-selector">
+              <button class="mode-btn active" data-mode="focus" onclick="selectTimerMode('focus')">Focus (25m)</button>
+              <button class="mode-btn" data-mode="short" onclick="selectTimerMode('short')">Short Break (5m)</button>
+              <button class="mode-btn" data-mode="long" onclick="selectTimerMode('long')">Long Break (15m)</button>
+            </div>
+
+            <div class="timer-circle-container">
+              <svg class="timer-svg" viewBox="0 0 240 240">
+                <circle class="timer-bg-path" cx="120" cy="120" r="110"></circle>
+                <circle class="timer-progress-path" id="timer-progress-circle" cx="120" cy="120" r="110"></circle>
+              </svg>
+              <div class="timer-display">
+                <div class="timer-time" id="timer-display-time">25:00</div>
+                <div class="timer-label">Deep Study Session</div>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button class="button button-primary timer-btn" id="timer-start-btn" onclick="toggleTimer()">▶ Start</button>
+              <button class="button button-secondary timer-btn" onclick="resetTimer()">↺</button>
+            </div>
+          </div>
+
+          <div class="history-card">
+            <h3>Session History Log</h3>
+            <div class="history-list">
+              <div class="history-item">
+                <div><strong>Calculus Practice</strong><br /><small style="color:var(--muted);">Mathematics</small></div>
+                <span class="priority low">25 min</span>
+              </div>
+              <div class="history-item">
+                <div><strong>Psychology Reading</strong><br /><small style="color:var(--muted);">Psychology</small></div>
+                <span class="priority low">25 min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: TASK CREATION & EDITING -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-heading">Create New Task</h3>
+        <button class="close-btn" onclick="closeTaskModal()">✕</button>
+      </div>
+      <form id="task-form">
+        <input type="hidden" id="modal-task-id" />
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Task Title</label>
+          <input type="text" class="form-input" id="modal-task-title" placeholder="e.g. Finish chemistry lab report" required />
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Subject / Category</label>
+          <select class="form-input" id="modal-task-subject">
+            <option value="Chemistry">Chemistry</option>
+            <option value="Psychology">Psychology</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="History">History</option>
+            <option value="Computer Science">Computer Science</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" class="form-input" id="modal-task-date" required />
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select class="form-input" id="modal-task-priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label>Notes / Description</label>
+          <textarea class="form-input" id="modal-task-notes" placeholder="Add study notes or sub-tasks..." rows="3"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" class="button button-secondary button-small" onclick="closeTaskModal()">Cancel</button>
+          <button type="submit" class="button button-primary button-small">Save Task <span>→</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
