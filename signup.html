@@ -21,19 +21,20 @@
         <h2>Create account</h2>
         <p>Start organizing your student life today</p>
       </div>
-      <form class="auth-form" id="signup-form">
+      <form class="auth-form" id="signup-form" novalidate>
         <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" class="form-input" id="signup-name" placeholder="Your Name" required />
+          <label for="signup-name">Full Name</label>
+          <input type="text" class="form-input" id="signup-name" placeholder="Your Name" autocomplete="name" required />
         </div>
         <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" class="form-input" id="signup-email" placeholder="Your Email Address" required />
+          <label for="signup-email">Email Address</label>
+          <input type="email" class="form-input" id="signup-email" placeholder="Your Email Address" autocomplete="email" required />
         </div>
         <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-input" id="signup-password" placeholder="At least 8 characters" required />
+          <label for="signup-password">Password</label>
+          <input type="password" class="form-input" id="signup-password" placeholder="At least 8 characters" autocomplete="new-password" required />
         </div>
+        <div class="auth-feedback" id="signup-feedback" role="alert" aria-live="polite" hidden></div>
         <button type="submit" class="button button-primary" style="width: 100%; margin-top: 10px;">Create Free Account <span>→</span></button>
       </form>
       <div style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted);">
