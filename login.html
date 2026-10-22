@@ -21,19 +21,20 @@
         <h2>Welcome back</h2>
         <p>Log in to your StudyFlow workspace</p>
       </div>
-      <form class="auth-form" id="login-form">
+      <form class="auth-form" id="login-form" novalidate>
         <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" class="form-input" id="login-email" value="noor@studyflow.edu" required />
+          <label for="login-email">Email Address</label>
+          <input type="email" class="form-input" id="login-email" value="noor@studyflow.edu" autocomplete="email" required />
         </div>
         <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-input" id="login-password" value="password123" required />
+          <label for="login-password">Password</label>
+          <input type="password" class="form-input" id="login-password" value="password123" autocomplete="current-password" required />
         </div>
         <div class="form-options">
           <label><input type="checkbox" checked /> Remember me</label>
           <a href="#" onclick="showToast('Password reset link sent! ✉'); return false;">Forgot password?</a>
         </div>
+        <div class="auth-feedback" id="login-feedback" role="alert" aria-live="polite" hidden></div>
         <button type="submit" class="button button-primary" style="width: 100%; margin-top: 10px;">Log In <span>→</span></button>
       </form>
       <div style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted);">

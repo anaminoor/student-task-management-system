@@ -1318,6 +1318,7 @@ function exportStudyData() {
 function resetDemoData() {
   if (!confirm('Reset StudyFlow demo data? This clears your local tasks, exams, notes, and settings.')) return;
   localStorage.removeItem('sf_user');
+  localStorage.removeItem('sf_users');
   localStorage.removeItem('sf_tasks');
   localStorage.removeItem('sf_teams');
   localStorage.removeItem('sf_exams');
@@ -1334,23 +1335,140 @@ window.handleLogout = function(e) {
   window.location.href = 'index.html';
 };
 
+function validateAuthInput({ name, email, password }, includeName = false) {
+  return Promise.resolve().then(() => {
+    if (includeName && !name.trim()) {
+      throw new Error('Please enter your full name.');
+    }
+    if (!email.trim()) {
+      throw new Error('Please enter your email address.');
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      throw new Error('Please enter a valid email address, such as name@example.com.');
+    }
+    if (!password) {
+      throw new Error('Please enter your password.');
+    }
+    if (includeName && password.length < 8) {
+      throw new Error('Your password must be at least 8 characters long.');
+    }
+    return {
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      password
+    };
+  });
+}
+
+function getAuthUsers() {
+  return Promise.resolve().then(() => {
+    const storedUsers = localStorage.getItem('sf_users');
+    let users = [];
+    if (storedUsers) {
+      try {
+        users = JSON.parse(storedUsers);
+      } catch {
+        throw new Error('Saved account data could not be read. Clear this site’s saved data and try again.');
+      }
+    }
+    if (!Array.isArray(users) || users.some(user =>
+      !user || typeof user.name !== 'string' || typeof user.email !== 'string' || typeof user.password !== 'string'
+    )) {
+      throw new Error('Saved account data is invalid. Clear this site’s saved data and try again.');
+    }
+
+    const demoExists = users.some(user => user.email.toLowerCase() === DEFAULT_USER.email);
+    if (!demoExists) {
+      users.push({ name: DEFAULT_USER.name, email: DEFAULT_USER.email, password: 'password123' });
+    }
+    if (!storedUsers || !demoExists) {
+      localStorage.setItem('sf_users', JSON.stringify(users));
+    }
+    return users;
+  });
+}
+
+function validateLoginCredentials(email, password) {
+  return validateAuthInput({ name: '', email, password })
+    .then(credentials => getAuthUsers().then(users => {
+      const user = users.find(account => account.email.toLowerCase() === credentials.email);
+      if (!user) {
+        throw new Error('No account was found with that email. Please sign up first.');
+      }
+      if (user.password !== credentials.password) {
+        throw new Error('That password is incorrect. Please check it and try again.');
+      }
+      return user;
+    }));
+}
+
+function addUserToLocalStorage({ name, email, password }) {
+  return validateAuthInput({ name, email, password }, true)
+    .then(user => getAuthUsers().then(users => {
+      if (users.some(account => account.email.toLowerCase() === user.email)) {
+        throw new Error('An account with that email already exists. Please log in instead.');
+      }
+      users.push(user);
+      localStorage.setItem('sf_users', JSON.stringify(users));
+      return user;
+    }));
+}
+
+function showAuthFeedback(formId, message) {
+  const feedback = document.getElementById(`${formId}-feedback`);
+  if (!feedback) return;
+  feedback.textContent = message;
+  feedback.hidden = !message;
+}
+
 function handleLogin(e) {
   e.preventDefault();
-  state.user.isLoggedIn = true;
-  saveState();
-  window.location.href = 'dashboard.html';
+  showAuthFeedback('login', '');
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  validateLoginCredentials(email, password)
+    .then(account => {
+      state.user = {
+        ...state.user,
+        name: account.name,
+        email: account.email,
+        avatar: account.name[0].toUpperCase(),
+        isLoggedIn: true
+      };
+      saveState();
+      window.location.href = 'dashboard.html';
+    })
+    .catch(error => {
+      showAuthFeedback('login', error.message || 'Login could not be completed. Please try again.');
+    });
 }
 
 function handleSignup(e) {
   e.preventDefault();
-  const name = document.getElementById('signup-name')?.value.trim();
-  const email = document.getElementById('signup-email')?.value.trim();
-  if (name) state.user.name = name;
-  if (email) state.user.email = email;
-  state.user.avatar = name ? name[0].toUpperCase() : 'S';
-  state.user.isLoggedIn = true;
-  saveState();
-  window.location.href = 'dashboard.html';
+  showAuthFeedback('signup', '');
+  const name = document.getElementById('signup-name').value;
+  const email = document.getElementById('signup-email').value;
+  const password = document.getElementById('signup-password').value;
+  addUserToLocalStorage({ name, email, password })
+    .then(account => {
+      state.user = {
+        ...state.user,
+        name: account.name,
+        email: account.email,
+        avatar: account.name[0].toUpperCase(),
+        isLoggedIn: true
+      };
+      try {
+        saveState();
+      } catch (error) {
+        showAuthFeedback('signup', 'Your account was created, but your session could not be saved. Please log in.');
+        return;
+      }
+      window.location.href = 'dashboard.html';
+    })
+    .catch(error => {
+      showAuthFeedback('signup', error.message || 'Sign up could not be completed. Please try again.');
+    });
 }
 
 function escapeHtml(str) {

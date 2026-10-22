@@ -248,6 +248,7 @@ body { margin: 0; background: var(--bg); color: var(--ink); font-family: "DM San
 .form-group label { font-size: 11px; font-weight: 700; color: var(--ink); text-transform: uppercase; }
 .form-options { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 .form-options a { color: var(--blue); text-decoration: none; font-weight: 600; }
+.auth-feedback { padding: 10px 12px; border: 1px solid #e7a4a4; border-radius: 8px; background: #fff3f3; color: #9d2929; font-size: 12px; line-height: 1.5; }
 
 /* ==========================================================================
    APP SHELL MOBILE LAYOUT & REVEALABLE MOBILE NAVIGATION DRAWER
