@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Assistant — StudyFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="load" id="loader-overlay"><div class="load-brand"><span class="brand-mark">✓</span><span>Studyflow</span></div><div class="load-spinner"></div></div>
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar-rail">
+      <a class="sidebar-brand" href="index.html">
+        <div class="brand-mark">✓</div>
+        <span>Studyflow</span>
+      </a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link" href="dashboard.html"><span class="rail-icon">⌂</span><span>Dashboard</span></a>
+        <a class="sidebar-link" href="tasks.html"><span class="rail-icon">✓</span><span>Tasks</span></a>
+        <a class="sidebar-link" href="calendar.html"><span class="rail-icon">▣</span><span>Calendar</span></a>
+        <a class="sidebar-link" href="academics.html"><span class="rail-icon">◎</span><span>Academics</span></a>
+        <a class="sidebar-link" href="study.html"><span class="rail-icon">◷</span><span>Study Sessions</span></a>
+        <a class="sidebar-link" href="progress.html"><span class="rail-icon">📊</span><span>Progress</span></a>
+        <a class="sidebar-link" href="team.html"><span class="rail-icon">👥</span><span>Teams</span></a>
+        <a class="sidebar-link active" href="ai.html"><span class="rail-icon">✦</span><span>AI Assistant</span></a>
+        <a class="sidebar-link" href="settings.html"><span class="rail-icon">⚙</span><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-user">
+        <a class="user-avatar-btn" href="settings.html" style="flex:1;">
+          <div class="user-avatar user-avatar-display">N</div>
+          <div class="user-info">
+            <strong class="user-name-display">Noor Anami</strong>
+            <small>Student Plan</small>
+          </div>
+        </a>
+        <div class="sidebar-user-actions">
+          <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌙</button>
+          <button onclick="handleLogout(event)" title="Log Out" style="border:0; background:transparent; cursor:pointer; font-size: 16px; color: crimson; padding: 6px;">🚪</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-header">
+        <div class="app-header-inner">
+          <div class="search-bar-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="task-search-input" placeholder="Search tasks, subjects..." />
+          </div>
+          <div class="header-actions">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">🌙</button>
+            <button class="button button-primary button-small" onclick="openTaskModal()">+ New Task</button>
+            <a class="logout-link" href="#" onclick="handleLogout(event)" style="font-size: 13px; font-weight: 600; cursor: pointer;">Log Out</a>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="chat-card">
+          <div style="border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 24px; color: var(--blue);">✦</span>
+            <div>
+              <h3 style="font: 700 20px Outfit, sans-serif; margin: 0; color: var(--ink);">StudyFlow AI Assistant</h3>
+              <small style="color: var(--muted);">Smart suggestions based on your deadlines & priorities</small>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="ai-chat-messages">
+            <div class="chat-bubble assistant">
+              Hello Noor! ✦ I'm your StudyFlow assistant. What can I help you work on today?
+            </div>
+          </div>
+
+          <div class="prompt-suggestions">
+            <span class="prompt-chip" onclick="sendPresetPrompt('What assignments are due tomorrow?')">Due tomorrow?</span>
+            <span class="prompt-chip" onclick="sendPresetPrompt('Which task is highest priority?')">Highest priority?</span>
+            <span class="prompt-chip" onclick="sendPresetPrompt('How many tasks are pending?')">Pending count</span>
+            <span class="prompt-chip" onclick="sendPresetPrompt('Create a study schedule.')">Study schedule</span>
+            <span class="prompt-chip" onclick="sendPresetPrompt('Break down Complete DBMS Project')">Break down project</span>
+            <span class="prompt-chip" onclick="sendPresetPrompt('Remind me to finish chemistry today.')">Set reminder</span>
+          </div>
+
+          <form class="chat-input-bar" id="ai-chat-form">
+            <input type="text" class="chat-input" id="ai-chat-input" placeholder="Ask what to work on next..." required />
+            <button class="button button-primary button-small" type="submit">Send <span>→</span></button>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: TASK CREATION & EDITING -->
+  <div class="modal-overlay" id="task-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-heading">Create New Task</h3>
+        <button class="close-btn" onclick="closeTaskModal()">✕</button>
+      </div>
+      <form id="task-form">
+        <input type="hidden" id="modal-task-id" />
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Task Title</label>
+          <input type="text" class="form-input" id="modal-task-title" placeholder="e.g. Finish chemistry lab report" required />
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Subject / Category</label>
+          <select class="form-input" id="modal-task-subject">
+            <option value="Chemistry">Chemistry</option>
+            <option value="Psychology">Psychology</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="History">History</option>
+            <option value="Computer Science">Computer Science</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" class="form-input" id="modal-task-date" required />
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <select class="form-input" id="modal-task-priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Status</label>
+            <select class="form-input" id="modal-task-status">
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Difficulty</label>
+            <select class="form-input" id="modal-task-difficulty">
+              <option value="1">1 - Easy</option>
+              <option value="2">2</option>
+              <option value="3" selected>3 - Normal</option>
+              <option value="4">4</option>
+              <option value="5">5 - Hard</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estimate</label>
+            <input type="number" class="form-input" id="modal-task-estimate" min="10" step="5" value="60" />
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+          <div class="form-group">
+            <label>Repeat</label>
+            <select class="form-input" id="modal-task-recurrence">
+              <option value="none">None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assignee</label>
+            <input type="text" class="form-input" id="modal-task-assignee" placeholder="Noor" />
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label>Files</label>
+          <input type="text" class="form-input" id="modal-task-files" placeholder="assignment.pdf, notes.docx" />
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label>Notes / Description</label>
+          <textarea class="form-input" id="modal-task-notes" placeholder="Add study notes or sub-tasks..." rows="3"></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" class="button button-secondary button-small" onclick="closeTaskModal()">Cancel</button>
+          <button type="submit" class="button button-primary button-small">Save Task <span>→</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
