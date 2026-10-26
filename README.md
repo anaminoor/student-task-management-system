@@ -90,6 +90,10 @@ The project may contain additional assets or files depending on the version you 
 5. Explore progress, academics, teams, AI assistant, and settings pages.
 6. Use the theme control to switch between light and dark appearance.
 
+## Live Demo
+
+🚀 [View Live Website](https://your-project.vercel.app)
+
 ## Data and Privacy
 
 This version uses client-side JavaScript and browser storage for supported application state. Data saved in browser storage is specific to that browser and origin; it is not automatically synchronized between devices. Avoid entering real passwords or sensitive personal information into a demo application unless authentication and data protection have been properly implemented.
